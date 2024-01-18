@@ -19,7 +19,7 @@ Data structures to consider:
 """
 # Prototype code, you can follow different implementation process
 
-class Song:
+'''class Song:
     def __init__(self, title, artist, album, genre, length):
 
 class MusicLibrary:
@@ -62,4 +62,101 @@ Playlist: My Playlist 1
 2. Song 2 - Artist 2
 
 Songs by Artist 1:
-Song 1 - Album 1
+Song 1 - Album 1'''
+
+class Song:
+    def __init__(self, title, artist, album, genre, length):
+        self.title = title
+        self.artist = artist
+        self.album = album
+        self.genre = genre
+        self.length = length
+
+class MusicLibrary:
+    def __init__(self):
+        self.song_by_title = {}
+        self.song_by_artist = {}
+        self.song_by_album = {}
+        self.song_by_genre = {}
+
+    def add_song(self, song):
+        if song.title not in self.song_by_title:
+            self.song_by_title[song.title] = song
+
+            self.song_by_artist.setdefault(song.artist, set()).add(song)
+            self.song_by_album.setdefault(song.album, set()).add(song)
+            self.song_by_genre.setdefault(song.genre, set()).add(song)
+
+    def get_songs_by_artist(self, artist):
+        return self.song_by_artist.get(artist, set())
+
+    def get_songs_by_album(self, album):
+        return self.song_by_album.get(album, set())
+
+    def get_songs_by_genre(self, genre):
+        return self.song_by_genre.get(genre, set())
+
+    def get_songs_by_title(self, title):
+        return self.song_by_title.get(title, set())
+
+
+class Playlist:
+    def __init__(self, name):
+        self.name = name
+        self.song = set()
+
+    def add_song(self, song):
+        if song not in self.song:
+            self.song.add(song)
+
+    def remove_song(self, song):
+        self.song.remove(song)
+
+    def reorder_songs(self):
+        song_list = list(self.song)
+        reorder_list = sorted(song_list)
+        self.song = set(reorder_list)
+
+    def display_playlist(self):
+        print(f"Playlist: {self.name}")
+        song_list = list(self.song)
+        for i in range(1, len(self.song) + 1):
+            song = song_list[i - 1]
+            print(f"{i}. {song.title} - {song.artist}")
+
+# Create songs
+song1 = Song("For the First Time", "Halle Bailey", "Album 1", "Pop", "3:30")
+song2 = Song("Hits Different", "Taylor Swift", "Album 2", "Pop", "4:15")
+song3 = Song("Now That We Don’t Talk", "Taylor Swift", "Album 3", "Pop", "3:15")
+song4 = Song("Fearless", "Taylor Swift", "Album 4", "Pop", "3:55")
+song5 = Song("Do It", "Halle Bailey", "Album 5", "Pop", "3:05")
+
+# Create a music library
+music_library = MusicLibrary()
+
+# Add songs to the music library
+music_library.add_song(song1)
+music_library.add_song(song2)
+music_library.add_song(song3)
+music_library.add_song(song4)
+music_library.add_song(song5)
+
+# Get songs by artist
+songs_by_artist = music_library.get_songs_by_artist("Taylor Swift")
+
+# Create playlists
+playlist1 = Playlist("My Playlist 1")
+
+# Add songs to playlists
+playlist1.add_song(song1)
+playlist1.add_song(song2)
+playlist1.add_song(song5)
+
+# Display playlists
+playlist1.display_playlist()
+
+# Searching for songs by artist
+print("\nSong by the Artist:")
+for song in songs_by_artist:
+    print(f"{song.title} - {song.album}")
+
